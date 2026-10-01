@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Singtunado — Neon Karaoke TV Stage</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/host.css">
+  <link rel="stylesheet" href="/css/score-modal.css">
+</head>
+<body>
+  <div class="ambient-glow"></div>
+
+  <div class="host-container">
+    <!-- Top Stage Bar -->
+    <header class="stage-header">
+      <div class="brand-section">
+        <div class="brand-logo">
+          <span>🎙️</span>
+          <span class="neon-text-pink">Singtunado</span>
+          <span style="font-size: 0.85rem; color: var(--neon-cyan); font-weight: 800; letter-spacing: 0.1em;">KARAOKE NIGHT</span>
+        </div>
+        <div class="room-badge-container">
+          <span class="badge badge-pink">TV STAGE</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 700;">ROOM:</span>
+          <span id="room-code-display" class="room-code-tag">----</span>
+        </div>
+      </div>
+
+      <div class="stage-actions">
+        <span id="singers-count-badge" class="badge badge-cyan">👥 0 Singers Online</span>
+        <button id="toggle-donate-btn" class="btn btn-pink" style="padding: 6px 14px; font-size: 0.85rem;">
+          💖 Support Vonn
+        </button>
+        <button id="toggle-qr-btn" class="btn btn-glass" title="Toggle QR Code">
+          📱 Show QR
+        </button>
+        <button id="toggle-queue-btn" class="btn btn-glass" title="Toggle Queue Drawer">
+          📋 Queue (<span id="queue-count-badge">0</span>)
+        </button>
+        <button id="fullscreen-btn" class="btn btn-glass btn-icon" title="Toggle Fullscreen">
+          ⛶
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Stage Arena -->
+    <main class="stage-main">
+      <div class="video-arena">
+        <!-- Floating Now-Playing Overlay -->
+        <div id="now-singing-bar" class="now-singing-bar hidden">
+          <div class="singer-info">
+            <div id="singer-avatar" class="singer-avatar">🎤</div>
+            <div class="song-details">
+              <h3 id="current-song-title">Song Title</h3>
+              <p>Singer: <span id="current-song-singer" style="color: #fff;"></span> • <span id="current-song-artist">Artist</span></p>
+            </div>
+          </div>
+          <div>
+            <span class="badge badge-pink">● LIVE SINGING</span>
+          </div>
+        </div>
+
+        <!-- Video Player Wrapper -->
+        <div class="player-wrapper">
+          <div id="yt-player-container">
+            <div id="yt-player"></div>
+          </div>
+
+          <!-- Idle Stage with Neon Karaoke Night Centerpiece -->
+          <div id="idle-stage" class="idle-stage">
+            <div class="neon-stage-sign">
+              <div class="neon-stage-ring"></div>
+              <div class="stage-mic-icon">🎙️</div>
+              <h1 class="stage-neon-title neon-text-pink">Karaoke</h1>
+              <div class="stage-neon-subtitle neon-text-cyan">
+                ✨ Night Party ✨
+              </div>
+            </div>
+
+            <p class="idle-subtitle">
+              Scan the TV QR code with your smartphone camera to browse millions of songs and reserve your spot on stage!
+            </p>
+            
+            <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
+              <button id="start-starter-btn" class="btn btn-pink" style="font-size: 1.05rem;">
+                ▶ Start with an Anthem
+              </button>
+              <button id="expand-qr-btn" class="btn btn-cyan" style="font-size: 1.05rem;">
+                📱 Open Big QR Code
+              </button>
+              <button id="idle-donate-btn" class="btn btn-yellow" style="font-size: 1.05rem;">
+                💖 Support Vonn Serrano
+              </button>
+            </div>
+          </div>
+
+          <!-- Countdown / Transition Intermission Overlay -->
+          <div id="countdown-overlay" class="countdown-overlay hidden">
+            <div class="countdown-number" id="countdown-number">3</div>
+            <div class="countdown-title">Next Singer Taking The Stage:</div>
+            <div class="countdown-singer" id="countdown-singer"></div>
+            <p id="countdown-song" style="color: var(--neon-cyan); font-size: 1.4rem; font-weight: 700; margin-top: 6px;"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Queue Drawer -->
+      <aside id="stage-queue-drawer" class="stage-queue-drawer">
+        <div class="drawer-header">
+          <h3 class="neon-text-pink">Upcoming Songs</h3>
+          <button id="close-drawer-btn" class="btn btn-glass" style="padding: 4px 10px; font-size: 0.8rem;">
+            ✕
+          </button>
+        </div>
+        <div id="queue-items-list" class="queue-items-list">
+          <p style="color: var(--text-muted); text-align: center; margin-top: 40px; font-size: 0.9rem;">
+            No songs reserved yet.<br>Scan QR to add songs!
+          </p>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Bottom Stage Ticker -->
+    <footer class="stage-ticker">
+      <div class="ticker-left">
+        <span class="badge badge-yellow">NEXT UP</span>
+        <span id="next-up-ticker" style="color: #fff; font-weight: 700;">
+          Queue is empty. Waiting for singers...
+        </span>
+      </div>
+
+      <div class="ticker-right">
+        <!-- Host Controls -->
+        <button id="skip-song-btn" class="btn btn-glass" style="padding: 6px 14px; font-size: 0.85rem;">
+          ⏭ Skip Track
+        </button>
+        <button id="replay-song-btn" class="btn btn-glass" style="padding: 6px 14px; font-size: 0.85rem;">
+          🔄 Replay
+        </button>
+      </div>
+    </footer>
+
+    <!-- Dockable Floating QR Code Widget -->
+    <div id="qr-widget" class="qr-floating-widget">
+      <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+        <span class="badge badge-pink">📱 SCAN TO QUEUE</span>
+        <button id="minimize-qr-btn" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.1rem; padding: 2px;">
+          −
+        </button>
+      </div>
+      <img id="qr-image" class="qr-img" src="" alt="Scan QR Code to Queue">
+      <div class="qr-caption">Scan with Phone Camera</div>
+      <div id="qr-url-text" class="qr-url-hint">http://...</div>
+    </div>
+
+    <!-- Reactions Floating Container -->
+    <div id="reactions-container"></div>
+
+    <!-- Modal: Donate to Vonn Serrano -->
+    <div id="tv-donate-modal" class="tv-donate-modal hidden">
+      <div class="donate-card" style="max-width: 420px; width: 100%;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.5rem;">💖</span>
+            <h3 style="font-size: 1.4rem; font-weight: 900; color: #fff;">Support Singtunado</h3>
+          </div>
+          <button id="close-donate-modal-btn" class="btn btn-glass" style="padding: 4px 10px; font-size: 0.8rem;">✕</button>
+        </div>
+
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 14px;">
+          Created with ❤️ by <strong class="neon-text-pink">Vonn Serrano</strong>
+        </p>
+
+        <div class="donate-qr-wrapper">
+          <span class="donate-qr-badge">DONATE QR</span>
+          <img src="/images/donate_qr.png" alt="Donate QR Code - Vonn Serrano">
+        </div>
+
+        <p style="font-size: 0.85rem; color: #e2e8f0; line-height: 1.4; margin-top: 10px;">
+          Scan with your payment app (GCash, Maya, Bank) to support hosting and future features!
+        </p>
+      </div>
+    </div>
+    <!-- Karaoke Score Reveal Modal (Plays when a song finishes) -->
+    <div id="score-reveal-modal" class="ksm-overlay" style="display: none;">
+      <div class="ksm-modal" onclick="event.stopPropagation()">
+        <h2 class="ksm-header">
+          <span>🎤</span> YOUR KARAOKE SCORE
+        </h2>
+
+        <div class="ksm-score-wrapper">
+          <div id="ksm-score-display" class="ksm-score">0</div>
+        </div>
+
+        <div class="ksm-phrase-container">
+          <div id="ksm-phrase-display" class="ksm-phrase">
+            <span id="ksm-phrase-emoji" class="ksm-phrase-emoji">🏆</span>
+            <span id="ksm-phrase-quote" class="ksm-phrase-quote">"Grammy pending. Please hold."</span>
+          </div>
+        </div>
+
+        <div class="ksm-actions">
+          <button id="ksm-sing-again-btn" type="button" class="ksm-btn ksm-btn-primary">
+            Sing Again →
+          </button>
+          <button id="ksm-next-queue-btn" type="button" class="ksm-btn ksm-btn-secondary">
+            Next in Queue →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/soundboard.js"></script>
+  <script src="/js/host.js"></script>
+</body>
+</html>

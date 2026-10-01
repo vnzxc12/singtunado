@@ -1,0 +1,234 @@
+/* Karaoke Score Reveal Modal - Neon Disco Aesthetic */
+
+.ksm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 3, 18, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: ksmFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes ksmFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Modal Card with Pulsing Neon Border */
+.ksm-modal {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  background: radial-gradient(circle at 50% 0%, rgba(38, 14, 72, 0.95), rgba(12, 6, 26, 0.98));
+  border: 2.5px solid #ff2a85;
+  border-radius: 28px;
+  padding: 40px 32px 34px;
+  text-align: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  box-shadow: 
+    0 25px 70px rgba(0, 0, 0, 0.9),
+    0 0 35px rgba(255, 42, 133, 0.45),
+    inset 0 0 20px rgba(255, 42, 133, 0.2);
+  animation: 
+    ksmScaleIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
+    ksmBorderPulse 3s infinite alternate ease-in-out;
+}
+
+@keyframes ksmScaleIn {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes ksmBorderPulse {
+  0% {
+    border-color: #ff2a85;
+    box-shadow: 
+      0 25px 70px rgba(0, 0, 0, 0.9),
+      0 0 30px rgba(255, 42, 133, 0.45),
+      inset 0 0 15px rgba(255, 42, 133, 0.2);
+  }
+  50% {
+    border-color: #00f0ff;
+    box-shadow: 
+      0 25px 70px rgba(0, 0, 0, 0.9),
+      0 0 40px rgba(0, 240, 255, 0.5),
+      inset 0 0 20px rgba(0, 240, 255, 0.22);
+  }
+  100% {
+    border-color: #ffe600;
+    box-shadow: 
+      0 25px 70px rgba(0, 0, 0, 0.9),
+      0 0 35px rgba(255, 230, 0, 0.45),
+      inset 0 0 18px rgba(255, 230, 0, 0.2);
+  }
+}
+
+/* Ambient Sparkle Dust in Modal */
+.ksm-modal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(2px 2px at 30px 40px, #ffffff, transparent),
+    radial-gradient(2px 2px at 80px 140px, #00f0ff, transparent),
+    radial-gradient(3px 3px at 180px 60px, #ff2a85, transparent),
+    radial-gradient(2px 2px at 280px 110px, #ffe600, transparent);
+  background-size: 150px 150px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* Header Text */
+.ksm-header {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #00f0ff;
+  text-shadow: 
+    0 0 8px rgba(0, 240, 255, 0.9),
+    0 0 20px rgba(0, 240, 255, 0.55);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Massive Score Number with Gradient Fill and Heavy Glow */
+.ksm-score-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.ksm-score {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(5.8rem, 16vw, 7.8rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, #ff2a85 20%, #ff66aa 55%, #ffe600 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 35px rgba(255, 42, 133, 0.9)) drop-shadow(0 0 70px rgba(255, 230, 0, 0.5));
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Witty Phrase with delayed fade-in */
+.ksm-phrase-container {
+  min-height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 12px 0 28px;
+  padding: 0 10px;
+}
+
+.ksm-phrase {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.22rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.55s ease-out, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ksm-phrase.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ksm-phrase-emoji {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.ksm-phrase-quote {
+  font-style: italic;
+  color: #e2e8f0;
+}
+
+/* Action Buttons */
+.ksm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 480px) {
+  .ksm-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ksm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 14px 22px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.ksm-btn:active {
+  transform: scale(0.96);
+}
+
+/* Primary Button: "Sing Again →" (Neon Pink) */
+.ksm-btn-primary {
+  background: linear-gradient(135deg, #ff2a85, #d91b68);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 0 22px rgba(255, 42, 133, 0.55);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.ksm-btn-primary:hover {
+  background: linear-gradient(135deg, #ff4d99, #ff2a85);
+  box-shadow: 0 0 38px rgba(255, 42, 133, 0.9), 0 0 60px rgba(255, 42, 133, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Secondary Button: "Back to Queue" (Dark with Cyan Outline) */
+.ksm-btn-secondary {
+  background: rgba(10, 5, 24, 0.8);
+  border: 2px solid #00f0ff;
+  color: #00f0ff;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.25);
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+}
+
+.ksm-btn-secondary:hover {
+  background: rgba(0, 240, 255, 0.12);
+  border-color: #38f9d7;
+  color: #ffffff;
+  box-shadow: 0 0 32px rgba(0, 240, 255, 0.7);
+  transform: translateY(-2px);
+}

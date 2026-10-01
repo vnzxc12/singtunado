@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Singtunado — Karaoke Score Reveal Demo</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Singtunado Common CSS & Modal CSS -->
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/score-modal.css">
+
+  <style>
+    .demo-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      position: relative;
+      z-index: 10;
+      text-align: center;
+    }
+
+    .demo-controls-card {
+      background: var(--bg-card);
+      border: 2px solid var(--neon-pink);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 25px var(--neon-pink-glow);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      max-width: 620px;
+      width: 100%;
+      backdrop-filter: var(--glass-blur);
+    }
+
+    .demo-btn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .tag-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+      display: block;
+    }
+  </style>
+
+  <!-- React & Babel for live in-browser preview -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div class="ambient-glow"></div>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // Easter Egg Phrases
+    const EASTER_EGG_SCORES = {
+      1: { emoji: '🥇', quote: 'Number one! Wait, no, out of 100. Yikes.' },
+      69: { emoji: '😏', quote: 'Nice. 🎸' },
+      99: { emoji: '😤', quote: 'One point away. The algorithm is just being petty.' },
+      100: { emoji: '🛑', quote: "HACKER DETECTED. (Just kidding, you're a legend)." }
+    };
+
+    const SAVAGE_TIER = [
+      { emoji: '💀', quote: 'Even the autotune filed a grievance.' },
+      { emoji: '🚨', quote: 'The microphone is asking for a restraining order.' },
+      { emoji: '📉', quote: 'Score: 404. Melody not found.' },
+      { emoji: '🫣', quote: 'Pitch perfect! Assuming the pitch was a completely different song.' },
+      { emoji: '🧅', quote: 'That performance had layers. Mostly making us cry.' },
+      { emoji: '🕊️', quote: 'A moment of silence for the original artist.' },
+      { emoji: '🔌', quote: 'We were this close to pulling the plug.' }
+    ];
+
+    const HYPE_TIER = [
+      { emoji: '🔥', quote: 'Beyoncé is currently shaking.' },
+      { emoji: '👑', quote: "We're shutting down the app. You just beat karaoke." },
+      { emoji: '💸', quote: 'Are you accepting record deals? Asking for a friend.' },
+      { emoji: '✨', quote: 'The vocal cords of an angel who just drank 3 Red Bulls.' },
+      { emoji: '🏆', quote: 'Grammy pending. Please hold.' },
+      { emoji: '🎤', quote: "You didn't just sing the song, you paid its mortgage." }
+    ];
+
+    const META_TIER = [
+      { emoji: '🤖', quote: 'The algorithm is confused, but highly entertained.' },
+      { emoji: '🎲', quote: "We rolled a dice for this score. You're welcome." },
+      { emoji: '🧮', quote: "Math can't explain what just happened on that stage." },
+      { emoji: '🛸', quote: 'Vocals so experimental they belong in Area 51.' },
+      { emoji: '🤷‍♂️', quote: 'Look, the score is fake, but our love for you is real.' }
+    ];
+
+    function getPhraseForScore(score) {
+      const num = Number(score);
+      if (EASTER_EGG_SCORES[num]) return EASTER_EGG_SCORES[num];
+      if (num >= 85) return HYPE_TIER[Math.floor(Math.random() * HYPE_TIER.length)];
+      if (num < 60) return SAVAGE_TIER[Math.floor(Math.random() * SAVAGE_TIER.length)];
+      const list = Math.random() > 0.4 ? META_TIER : (num >= 75 ? HYPE_TIER : SAVAGE_TIER);
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    // KaraokeScoreModal Component
+    function KaraokeScoreModal({
+      isOpen,
+      score,
+      onSingAgain,
+      onBackToQueue,
+      duration = 1500
+    }) {
+      const [displayScore, setDisplayScore] = useState(0);
+      const [isCountingFinished, setIsCountingFinished] = useState(false);
+      const animFrameRef = useRef(null);
+
+      const phrase = React.useMemo(() => getPhraseForScore(score), [score]);
+
+      useEffect(() => {
+        if (!isOpen) {
+          setDisplayScore(0);
+          setIsCountingFinished(false);
+          return;
+        }
+
+        setIsCountingFinished(false);
+        setDisplayScore(0);
+        const startTime = performance.now();
+
+        const animateScore = (currentTime) => {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easeProgress = 1 - Math.pow(1 - progress, 3);
+          const currentVal = Math.round(easeProgress * score);
+
+          setDisplayScore(currentVal);
+
+          if (progress < 1) {
+            animFrameRef.current = requestAnimationFrame(animateScore);
+          } else {
+            setDisplayScore(score);
+            setIsCountingFinished(true);
+          }
+        };
+
+        animFrameRef.current = requestAnimationFrame(animateScore);
+        return () => cancelAnimationFrame(animFrameRef.current);
+      }, [isOpen, score, duration]);
+
+      if (!isOpen) return null;
+
+      const formattedScore = (score === 1 && displayScore === 1) ? '01' : displayScore;
+
+      return (
+        <div className="ksm-overlay" onClick={onBackToQueue}>
+          <div className="ksm-modal" onClick={(e) => e.stopPropagation()}>
+            <h2 className="ksm-header">
+              <span>🎤</span> YOUR KARAOKE SCORE
+            </h2>
+
+            <div className="ksm-score-wrapper">
+              <div className="ksm-score">{formattedScore}</div>
+            </div>
+
+            <div className="ksm-phrase-container">
+              <div className={`ksm-phrase ${isCountingFinished ? 'visible' : ''}`}>
+                <span className="ksm-phrase-emoji">{phrase.emoji}</span>
+                <span className="ksm-phrase-quote">"{phrase.quote}"</span>
+              </div>
+            </div>
+
+            <div className="ksm-actions">
+              <button type="button" className="ksm-btn ksm-btn-primary" onClick={onSingAgain}>
+                Sing Again →
+              </button>
+              <button type="button" className="ksm-btn ksm-btn-secondary" onClick={onBackToQueue}>
+                Back to Queue
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Demo App
+    function App() {
+      const [isOpen, setIsOpen] = useState(false);
+      const [score, setScore] = useState(88);
+
+      const triggerScore = (target) => {
+        setScore(target);
+        setIsOpen(true);
+      };
+
+      const triggerRandom = () => {
+        const pool = [1, 45, 52, 69, 74, 82, 91, 95, 99, 100];
+        const randomScore = pool[Math.floor(Math.random() * pool.length)];
+        triggerScore(randomScore);
+      };
+
+      return (
+        <div className="demo-page">
+          <div className="demo-controls-card">
+            <span className="badge badge-pink" style={{ marginBottom: 12 }}>KARAOKE SCORE REVEAL</span>
+            <h1 className="neon-text-pink" style={{ fontSize: '2.5rem', marginBottom: 8 }}>
+              Score Reveal Modal Test
+            </h1>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: 24 }}>
+              Click any button below to trigger the score modal. Watch the score rapidly count up over 1.5s, then reveal the witty phrase!
+            </p>
+
+            <span className="tag-label" style={{ color: 'var(--neon-yellow)' }}>✨ RANDOM &amp; TIERS</span>
+            <div className="demo-btn-grid" style={{ marginBottom: 20 }}>
+              <button className="btn btn-pink" onClick={triggerRandom}>
+                🎲 Roll Random
+              </button>
+              <button className="btn btn-glass" onClick={() => triggerScore(48)}>
+                💀 Savage (48)
+              </button>
+              <button className="btn btn-cyan" onClick={() => triggerScore(92)}>
+                🔥 Hype (92)
+              </button>
+              <button className="btn btn-glass" onClick={() => triggerScore(75)}>
+                🤖 Meta (75)
+              </button>
+            </div>
+
+            <span className="tag-label" style={{ color: 'var(--neon-cyan)' }}>🥚 EASTER EGG TRIGGERS</span>
+            <div className="demo-btn-grid">
+              <button className="btn btn-yellow" onClick={() => triggerScore(1)}>
+                🥇 Score: 01
+              </button>
+              <button className="btn btn-yellow" onClick={() => triggerScore(69)}>
+                😏 Score: 69
+              </button>
+              <button className="btn btn-yellow" onClick={() => triggerScore(99)}>
+                😤 Score: 99
+              </button>
+              <button className="btn btn-yellow" onClick={() => triggerScore(100)}>
+                🛑 Score: 100
+              </button>
+            </div>
+
+            <div style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+              <a href="/host.html" style={{ color: 'var(--neon-cyan)', textDecoration: 'none', fontWeight: 700, fontSize: '0.9rem' }}>
+                ← Return to Live TV Stage
+              </a>
+            </div>
+          </div>
+
+          <KaraokeScoreModal
+            isOpen={isOpen}
+            score={score}
+            onSingAgain={() => {
+              triggerRandom();
+            }}
+            onBackToQueue={() => setIsOpen(false)}
+          />
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Singtunado — Neon Karaoke Party &amp; Mobile Remote</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .hero-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Iconic Neon Sign (Inspired by Neon Karaoke Night) */
+    .neon-sign-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 40px;
+      margin-bottom: 35px;
+    }
+
+    .neon-ring {
+      position: absolute;
+      width: 270px;
+      height: 270px;
+      border-radius: 50%;
+      border: 5px solid var(--neon-yellow);
+      box-shadow: 
+        0 0 15px var(--neon-yellow-glow),
+        0 0 35px var(--neon-yellow-glow),
+        inset 0 0 15px var(--neon-yellow-glow);
+      pointer-events: none;
+      animation: ringGlow 3s infinite alternate ease-in-out;
+    }
+
+    @keyframes ringGlow {
+      0% { box-shadow: 0 0 15px var(--neon-yellow-glow), inset 0 0 15px var(--neon-yellow-glow); }
+      100% { box-shadow: 0 0 30px var(--neon-yellow-glow), 0 0 60px rgba(255, 230, 0, 0.4), inset 0 0 25px var(--neon-yellow-glow); }
+    }
+
+    .neon-mic-icon {
+      font-size: 3.5rem;
+      color: var(--neon-cyan);
+      filter: drop-shadow(0 0 15px var(--neon-cyan-glow)) drop-shadow(0 0 30px var(--neon-cyan));
+      z-index: 2;
+      animation: micBob 2.5s infinite ease-in-out alternate;
+    }
+
+    @keyframes micBob {
+      0% { transform: translateY(0) rotate(-5deg); }
+      100% { transform: translateY(-8px) rotate(5deg); }
+    }
+
+    .neon-sign-title {
+      font-size: 3.8rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 10px;
+      z-index: 2;
+      line-height: 1;
+    }
+
+    .neon-sign-subtitle {
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      z-index: 2;
+      line-height: 1.1;
+      margin-top: 6px;
+    }
+
+    .disco-ball-accent {
+      font-size: 1.8rem;
+      animation: discoSpin 6s infinite linear;
+      display: inline-block;
+    }
+
+    @keyframes discoSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      width: 100%;
+      margin-bottom: 40px;
+    }
+
+    .portal-card {
+      background: var(--bg-card);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 2px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .portal-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .portal-card-pink {
+      border-color: var(--neon-pink);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 42, 133, 0.2);
+    }
+
+    .portal-card-pink:hover {
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 35px var(--neon-pink-glow);
+    }
+
+    .portal-card-cyan {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 240, 255, 0.2);
+    }
+
+    .portal-card-cyan:hover {
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 35px var(--neon-cyan-glow);
+    }
+
+    .portal-card-icon {
+      font-size: 3.2rem;
+      margin-bottom: 14px;
+    }
+
+    .portal-card h2 {
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .portal-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    /* Bottom Section with How it Works & Donate */
+    .bottom-layout-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 24px;
+      width: 100%;
+    }
+
+    @media (max-width: 860px) {
+      .bottom-layout-grid {
+        grid-template-columns: 1fr;
+      }
+      .neon-sign-title { font-size: 2.8rem; }
+      .neon-sign-subtitle { font-size: 1.9rem; }
+      .neon-ring { width: 210px; height: 210px; }
+    }
+
+    .how-it-works-box {
+      background: rgba(18, 9, 36, 0.7);
+      border: 1.5px solid var(--border-neon-yellow);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 230, 0, 0.15);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .step-number {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--neon-yellow);
+      color: #070312;
+      font-weight: 900;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 15px var(--neon-yellow-glow);
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-glow"></div>
+
+  <div class="hero-container">
+    <!-- Iconic Neon Sign Header (Karaoke Night Vibe) -->
+    <div class="neon-sign-wrapper">
+      <div class="neon-ring"></div>
+      <div class="neon-mic-icon">🎙️</div>
+      <h1 class="neon-sign-title neon-text-pink">Singtunado</h1>
+      <div class="neon-sign-subtitle neon-text-cyan">
+        <span class="disco-ball-accent">🪩</span> Karaoke Night <span class="disco-ball-accent">🪩</span>
+      </div>
+      <p style="margin-top: 14px; color: var(--text-muted); font-size: 1.05rem; z-index: 2; text-align: center; font-weight: 500;">
+        Wireless TV Stage &amp; Real-Time Mobile Song Remote. Turn any party screen into a live karaoke stage!
+      </p>
+    </div>
+
+    <!-- Choice Cards -->
+    <div class="cards-grid">
+      <!-- Card 1: TV Host Stage -->
+      <div class="portal-card portal-card-pink">
+        <div>
+          <div class="portal-card-icon">📺</div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <h2 style="color: #fff;">Launch TV Stage</h2>
+            <span class="badge badge-pink">TV HOST</span>
+          </div>
+          <p>
+            Open on your Smart TV, projector, or computer monitor. Creates a neon karaoke stage with lyrics player, live queue, dynamic QR code, and soundboard speakers.
+          </p>
+        </div>
+        <a href="/host.html" class="btn btn-pink" style="width: 100%; font-size: 1.05rem;">
+          Open TV Host Stage →
+        </a>
+      </div>
+
+      <!-- Card 2: Mobile Remote -->
+      <div class="portal-card portal-card-cyan">
+        <div>
+          <div class="portal-card-icon">📱</div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <h2 style="color: #fff;">Join Mobile Remote</h2>
+            <span class="badge badge-cyan">SINGERS</span>
+          </div>
+          <p>
+            Connect your smartphone to search YouTube songs, reserve tracks, move to next in line, and blast crowd sound reactions like applause and airhorns!
+          </p>
+          <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+            <input 
+              type="text" 
+              id="landing-room-input" 
+              class="input-field" 
+              placeholder="ENTER 4-LETTER CODE" 
+              maxlength="4" 
+              style="text-transform: uppercase; font-weight: 800; letter-spacing: 0.15em; text-align: center; font-size: 1.15rem;"
+            >
+          </div>
+        </div>
+        <button id="landing-join-btn" class="btn btn-cyan" style="width: 100%; font-size: 1.05rem;">
+          Connect Remote 🎤
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom Section: How It Works & Donate Card for Vonn Serrano -->
+    <div class="bottom-layout-grid">
+      <!-- How it works -->
+      <div class="how-it-works-box">
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 12px;">
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff;">
+            ✨ How Wireless Karaoke Works
+          </h3>
+          <span style="font-size: 0.8rem; color: var(--neon-yellow); font-weight: 700;">Zero App Installs</span>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div>
+            <h4 style="font-size: 1rem; font-weight: 700; color: #fff;">Launch Stage on TV</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+              Open <code>/host.html</code> on any Smart TV browser, projector, or laptop for high-definition video playback.
+            </p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div>
+            <h4 style="font-size: 1rem; font-weight: 700; color: #fff;">Scan QR Code with Phone</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+              Party guests scan the TV's QR code using their mobile phone cameras to join the songbook instantly.
+            </p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div>
+            <h4 style="font-size: 1rem; font-weight: 700; color: #fff;">Search, Reserve &amp; Hype</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+              Search millions of karaoke songs, reserve upcoming tracks, and send crowd cheering and airhorns without interrupting the singer!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Donate Card for Vonn Serrano -->
+      <div class="donate-card">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 4px;">
+          <span style="font-size: 1.4rem;">💖</span>
+          <h3 style="font-size: 1.3rem; font-weight: 900; color: #fff;">
+            Support Singtunado
+          </h3>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+          Developed with ❤️ by <strong class="neon-text-pink" style="font-size: 0.95rem;">Vonn Serrano</strong>
+        </p>
+
+        <div class="donate-qr-wrapper">
+          <span class="donate-qr-badge">DONATE QR</span>
+          <img src="/images/donate_qr.png" alt="Donate QR Code - Vonn Serrano">
+        </div>
+
+        <p style="font-size: 0.8rem; color: #e2e8f0; line-height: 1.4;">
+          Your donation helps keep Singtunado free, ad-free, and improving with new karaoke features!
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('landing-room-input');
+    const btn = document.getElementById('landing-join-btn');
+
+    btn.addEventListener('click', () => {
+      const code = input.value.trim().toUpperCase();
+      if (!code || code.length !== 4) {
+        alert('Please enter a valid 4-character Room Code (e.g. SING)!');
+        return;
+      }
+      window.location.href = `/remote.html?room=${code}`;
+    });
+
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') btn.click();
+    });
+  </script>
+</body>
+</html>
