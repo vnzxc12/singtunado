@@ -10,7 +10,7 @@
    - Designed for Smart TVs, laptops, and projectors with fullscreen presentation mode.
    - Dynamic **QR Code** and 4-letter **Room Code** generation for zero-install mobile pairing.
    - Integrated YouTube Karaoke video player with automatic transition to the next queued track.
-   - 3-second stage countdown banner announcing the next singer ("🎙️ Get ready, Vonn!").
+   - 3-second stage countdown banner announcing the next singer ("🎙️ Get ready, Alex!").
    - Live upcoming queue drawer and "Now Singing" banner.
    - Real-time receiver for crowd soundboard reactions (airhorns, applause, cheering).
 

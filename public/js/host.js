@@ -44,6 +44,7 @@
   const replaySongBtn = document.getElementById('replay-song-btn');
   const startStarterBtn = document.getElementById('start-starter-btn');
   const expandQrBtn = document.getElementById('expand-qr-btn');
+  const resModeBtn = document.getElementById('res-mode-btn');
   const toggleDonateBtn = document.getElementById('toggle-donate-btn');
   const idleDonateBtn = document.getElementById('idle-donate-btn');
   const closeDonateModalBtn = document.getElementById('close-donate-modal-btn');
@@ -532,6 +533,39 @@
           ytPlayer.seekTo(0);
           ytPlayer.playVideo();
         }
+      });
+    }
+
+    // Resolution Mode Toggle (Auto / Safe 90% / Fill)
+    const resModes = [
+      { id: 'auto', label: '📐 Auto Res', toast: '📐 Resolution: Auto Fit (Responsive 16:9)' },
+      { id: 'safe', label: '📐 TV Safe (90%)', toast: '📐 Resolution: TV Safe Zone (90% Scale)' },
+      { id: 'fill', label: '📐 Fill Arena', toast: '📐 Resolution: Full Arena Fill' }
+    ];
+
+    let currentResIdx = 0;
+    const savedResMode = localStorage.getItem('singtunado_res_mode');
+    if (savedResMode) {
+      const idx = resModes.findIndex(m => m.id === savedResMode);
+      if (idx !== -1) currentResIdx = idx;
+    }
+
+    function applyResMode(idx, notify = false) {
+      const mode = resModes[idx];
+      document.body.classList.remove('res-mode-safe', 'res-mode-fill');
+      if (mode.id === 'safe') document.body.classList.add('res-mode-safe');
+      if (mode.id === 'fill') document.body.classList.add('res-mode-fill');
+      if (resModeBtn) resModeBtn.textContent = mode.label;
+      localStorage.setItem('singtunado_res_mode', mode.id);
+      if (notify) showStageToast(mode.toast);
+    }
+
+    applyResMode(currentResIdx, false);
+
+    if (resModeBtn) {
+      resModeBtn.addEventListener('click', () => {
+        currentResIdx = (currentResIdx + 1) % resModes.length;
+        applyResMode(currentResIdx, true);
       });
     }
 

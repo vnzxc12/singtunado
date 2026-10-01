@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Singtunado — Neon Karaoke TV Stage</title>
   
   <!-- Fonts -->
@@ -37,7 +37,10 @@
       <div class="stage-actions">
         <span id="singers-count-badge" class="badge badge-cyan">👥 0 Singers Online</span>
         <button id="toggle-donate-btn" class="btn btn-pink" style="padding: 6px 14px; font-size: 0.85rem;">
-          💖 Support Vonn
+          💖 Donate QR
+        </button>
+        <button id="res-mode-btn" class="btn btn-glass" style="padding: 6px 12px; font-size: 0.85rem;" title="Toggle Resolution Mode (Auto / TV Safe / Fill)">
+          📐 Auto Res
         </button>
         <button id="toggle-qr-btn" class="btn btn-glass" title="Toggle QR Code">
           📱 Show QR
@@ -89,15 +92,15 @@
               Scan the TV QR code with your smartphone camera to browse millions of songs and reserve your spot on stage!
             </p>
             
-            <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
-              <button id="start-starter-btn" class="btn btn-pink" style="font-size: 1.05rem;">
+            <div class="idle-actions">
+              <button id="start-starter-btn" class="btn btn-pink">
                 ▶ Start with an Anthem
               </button>
-              <button id="expand-qr-btn" class="btn btn-cyan" style="font-size: 1.05rem;">
+              <button id="expand-qr-btn" class="btn btn-cyan">
                 📱 Open Big QR Code
               </button>
-              <button id="idle-donate-btn" class="btn btn-yellow" style="font-size: 1.05rem;">
-                💖 Support Vonn Serrano
+              <button id="idle-donate-btn" class="btn btn-yellow">
+                💖 Donate QR
               </button>
             </div>
           </div>
@@ -164,7 +167,7 @@
     <!-- Reactions Floating Container -->
     <div id="reactions-container"></div>
 
-    <!-- Modal: Donate to Vonn Serrano -->
+    <!-- Modal: Donate QR -->
     <div id="tv-donate-modal" class="tv-donate-modal hidden">
       <div class="donate-card" style="max-width: 420px; width: 100%;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -176,16 +179,16 @@
         </div>
 
         <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 14px;">
-          Created with ❤️ by <strong class="neon-text-pink">Vonn Serrano</strong>
+          Scan with GCash, Maya, or any bank app to support hosting &amp; new features!
         </p>
 
         <div class="donate-qr-wrapper">
           <span class="donate-qr-badge">DONATE QR</span>
-          <img src="/images/donate_qr.png" alt="Donate QR Code - Vonn Serrano">
+          <img src="/images/donate_qr.png" alt="Donate QR Code">
         </div>
 
         <p style="font-size: 0.85rem; color: #e2e8f0; line-height: 1.4; margin-top: 10px;">
-          Scan with your payment app (GCash, Maya, Bank) to support hosting and future features!
+          Thank you for supporting the Singtunado karaoke stage!
         </p>
       </div>
     </div>
