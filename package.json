@@ -1,13 +1,21 @@
 {
   "name": "singtunado",
   "version": "1.0.0",
-  "description": "",
+  "description": "Wireless Karaoke Player & Mobile Remote",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "keywords": [],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "karaoke",
+    "socketio",
+    "youtube",
+    "remote"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",

@@ -196,7 +196,7 @@ io.on('connection', (socket) => {
     isHost = true;
     socket.join(code);
 
-    let baseUrl = hostUrl || process.env.PUBLIC_URL;
+    let baseUrl = hostUrl || process.env.RENDER_EXTERNAL_URL || process.env.PUBLIC_URL;
     if (!baseUrl || baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1')) {
       baseUrl = (LOCAL_IP && LOCAL_IP !== 'localhost') ? `http://${LOCAL_IP}:${PORT}` : `http://localhost:${PORT}`;
     }

@@ -55,3 +55,23 @@ node server.js
 - `public/remote.html` & `public/js/remote.js` — Mobile songbook, reservation system, and soundboard controller.
 - `public/js/soundboard.js` — Zero-latency Web Audio API sound synthesizers (airhorn, applause, cheer, rimshot).
 - `public/css/` — Modern dark glassmorphic styling, responsive layout, and typography.
+
+---
+
+## ☁️ Deploy to Render (Free 24/7 Cloud Hosting)
+
+Singtunado is fully configured for continuous real-time WebSockets on **[Render.com](https://render.com/)**:
+
+1. Push your code to GitHub: `https://github.com/vnzxc12/singtunado`
+2. Go to **[dashboard.render.com](https://dashboard.render.com/)** and sign in.
+3. Click **New +** → **Web Service**.
+4. Connect your **`singtunado`** GitHub repository.
+5. Render will auto-fill:
+   - **Environment**: `Node`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+   - **Instance Type**: `Free`
+6. Click **Deploy Web Service**!
+7. Once deployed, Render gives you a live public HTTPS URL (e.g. `https://singtunado.onrender.com`).
+   - Open `/host.html` on your Smart TV or projector.
+   - The TV stage QR code automatically points to the cloud URL, allowing any guest on Wi-Fi or mobile cellular data to join instantly!
