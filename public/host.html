@@ -36,17 +36,17 @@
 
       <div class="stage-actions">
         <span id="singers-count-badge" class="badge badge-cyan">👥 0 Singers Online</span>
-        <button id="toggle-donate-btn" class="btn btn-pink" style="padding: 6px 14px; font-size: 0.85rem;">
-          💖 Donate QR
+        <button id="toggle-donate-btn" class="btn btn-pink" style="padding: 6px 14px; font-size: 0.85rem;" title="Support Singtunado">
+          💖 <span class="btn-label">Donate QR</span>
         </button>
         <button id="res-mode-btn" class="btn btn-glass" style="padding: 6px 12px; font-size: 0.85rem;" title="Toggle Resolution Mode (Auto / TV Safe / Fill)">
-          📐 Auto Res
+          📐 <span class="btn-label">Auto Res</span>
         </button>
-        <button id="toggle-qr-btn" class="btn btn-glass" title="Toggle QR Code">
-          📱 Show QR
+        <button id="toggle-qr-btn" class="btn btn-glass" title="Toggle Big QR Code (Press Q)">
+          📱 <span class="btn-label">Show QR</span>
         </button>
         <button id="toggle-queue-btn" class="btn btn-glass" title="Toggle Queue Drawer">
-          📋 Queue (<span id="queue-count-badge">0</span>)
+          📋 <span class="btn-label">Queue</span> (<span id="queue-count-badge">0</span>)
         </button>
         <button id="fullscreen-btn" class="btn btn-glass btn-icon" title="Toggle Fullscreen">
           ⛶
@@ -67,7 +67,9 @@
             </div>
           </div>
           <div>
-            <span class="badge badge-pink">● LIVE SINGING</span>
+            <span class="badge badge-pink now-singing-badge">
+              <span class="now-singing-dot"></span> LIVE SINGING
+            </span>
           </div>
         </div>
 
@@ -152,20 +154,51 @@
     </footer>
 
     <!-- Dockable Floating QR Code Widget -->
-    <div id="qr-widget" class="qr-floating-widget">
-      <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
-        <span class="badge badge-pink">📱 SCAN TO QUEUE</span>
-        <button id="minimize-qr-btn" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.1rem; padding: 2px;">
-          −
-        </button>
+    <div id="qr-widget" class="qr-floating-widget" title="Click to enlarge or scan with phone">
+      <div class="qr-widget-header">
+        <span class="badge badge-pink qr-badge-tag">📱 SCAN QR</span>
+        <div style="display: flex; align-items: center; gap: 2px;">
+          <button id="expand-qr-modal-btn" class="qr-widget-btn" title="Open Big TV QR Code (Press Q)" type="button">⛶</button>
+          <button id="minimize-qr-btn" class="qr-widget-btn" title="Minimize / Restore QR" type="button">−</button>
+        </div>
       </div>
-      <img id="qr-image" class="qr-img" src="" alt="Scan QR Code to Queue">
-      <div class="qr-caption">Scan with Phone Camera</div>
+      <img id="qr-image" class="qr-img" src="" alt="Scan QR Code to Queue" title="Click to enlarge QR code">
+      <div class="qr-caption">Scan with Phone</div>
       <div id="qr-url-text" class="qr-url-hint">http://...</div>
     </div>
 
     <!-- Reactions Floating Container -->
     <div id="reactions-container"></div>
+
+    <!-- Modal: Stage Big QR Modal (Scan from across the room / Smart TV) -->
+    <div id="tv-qr-modal" class="tv-qr-modal hidden">
+      <div class="tv-qr-card">
+        <div class="tv-qr-header">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 1.6rem;">📱</span>
+            <h3 style="font-size: 1.35rem; font-weight: 900; color: #fff;">Join Stage Songbook</h3>
+          </div>
+          <button id="close-qr-modal-btn" class="btn btn-glass" style="padding: 4px 10px; font-size: 0.85rem;" type="button">✕</button>
+        </div>
+
+        <div class="tv-qr-room-badge">
+          <span>ROOM CODE:</span>
+          <strong id="modal-room-code" class="room-code-tag">----</strong>
+        </div>
+
+        <div class="tv-qr-wrapper">
+          <img id="modal-qr-image" class="tv-modal-qr-img" src="" alt="Scan QR to Queue Songs">
+        </div>
+
+        <p id="modal-qr-url-text" class="tv-qr-url-hint">http://...</p>
+
+        <div class="tv-qr-instructions">
+          <div class="tv-qr-step"><span>1</span> Open Phone Camera</div>
+          <div class="tv-qr-step"><span>2</span> Scan TV QR Code</div>
+          <div class="tv-qr-step"><span>3</span> Pick &amp; Queue Songs!</div>
+        </div>
+      </div>
+    </div>
 
     <!-- Modal: Donate QR -->
     <div id="tv-donate-modal" class="tv-donate-modal hidden">

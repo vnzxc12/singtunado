@@ -175,9 +175,26 @@
       .bottom-layout-grid {
         grid-template-columns: 1fr;
       }
-      .neon-sign-title { font-size: 2.8rem; }
-      .neon-sign-subtitle { font-size: 1.9rem; }
-      .neon-ring { width: 210px; height: 210px; }
+      .neon-sign-title { font-size: clamp(2rem, 7vw, 2.8rem); }
+      .neon-sign-subtitle { font-size: clamp(1.3rem, 5vw, 1.9rem); }
+      .neon-ring { width: clamp(180px, 45vw, 210px); height: clamp(180px, 45vw, 210px); }
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-container {
+        padding: 20px 12px;
+      }
+      .portal-card {
+        padding: 20px 16px;
+      }
+      .how-it-works-box {
+        padding: 18px 14px;
+      }
+      .neon-sign-wrapper {
+        padding: 20px 10px;
+        margin-bottom: 20px;
+      }
     }
 
     .how-it-works-box {

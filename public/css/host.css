@@ -224,60 +224,124 @@
   padding: clamp(6px, 1.2vmin, 10px) clamp(12px, 2vmin, 18px);
 }
 
-/* Floating Now-Playing Overlay */
+/* Floating Now-Playing Overlay (Sleek Compact Pill / Capsule) */
 .now-singing-bar {
   position: absolute;
-  top: 30px;
-  left: 30px;
-  right: 30px;
-  display: flex;
+  top: clamp(8px, 1.4vmin, 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 26px;
-  background: rgba(12, 6, 26, 0.9);
+  width: auto;
+  max-width: min(90%, 480px);
+  padding: clamp(5px, 0.9vmin, 8px) clamp(10px, 1.5vmin, 16px);
+  background: rgba(12, 6, 26, 0.88);
   backdrop-filter: var(--glass-blur);
-  border: 2px solid var(--neon-pink);
-  box-shadow: 0 0 25px var(--neon-pink-glow);
-  border-radius: var(--radius-md);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1.5px solid var(--neon-pink);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.75), 0 0 14px var(--neon-pink-glow);
+  border-radius: var(--radius-full);
   z-index: 15;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.3s ease, filter 0.3s ease;
+  pointer-events: auto;
+  cursor: default;
+  gap: clamp(8px, 1.2vw, 14px);
 }
 
 .now-singing-bar.hidden {
   opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-10px);
+}
+
+.now-singing-bar.dimmed {
+  opacity: 0.65;
+  filter: saturate(0.85);
+}
+
+.now-singing-bar:hover {
+  opacity: 1 !important;
+  filter: none !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 0 20px var(--neon-pink-glow);
 }
 
 .singer-info {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: clamp(6px, 1vmin, 10px);
+  min-width: 0;
+  flex: 1;
 }
 
 .singer-avatar {
-  width: 48px;
-  height: 48px;
+  width: clamp(24px, 3.2vmin, 28px);
+  height: clamp(24px, 3.2vmin, 28px);
   border-radius: var(--radius-full);
   background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan));
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
-  font-size: 1.2rem;
+  font-size: clamp(0.75rem, 1vmin, 0.85rem);
   color: #fff;
-  box-shadow: 0 0 15px var(--neon-pink-glow);
+  box-shadow: 0 0 8px var(--neon-pink-glow);
+  flex-shrink: 0;
+}
+
+.song-details {
+  min-width: 0;
+  overflow: hidden;
 }
 
 .song-details h3 {
-  font-size: 1.35rem;
-  font-weight: 900;
+  font-size: clamp(0.78rem, 1.1vmin, 0.92rem);
+  font-weight: 800;
   color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: clamp(110px, 20vw, 220px);
+  line-height: 1.2;
+  margin: 0;
 }
 
 .song-details p {
-  font-size: 0.95rem;
+  font-size: clamp(0.66rem, 0.9vmin, 0.74rem);
   color: var(--neon-cyan);
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: clamp(110px, 20vw, 220px);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.now-singing-badge {
+  font-size: clamp(0.6rem, 0.85vmin, 0.68rem) !important;
+  padding: 2px 7px !important;
+  letter-spacing: 0.05em !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.now-singing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--neon-pink);
+  box-shadow: 0 0 6px var(--neon-pink);
+  animation: liveDotPulse 1.2s infinite ease-in-out;
+  display: inline-block;
+}
+
+@keyframes liveDotPulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.25); filter: drop-shadow(0 0 4px #ff2a85); }
 }
 
 /* Bottom Next Up Ticker */
@@ -305,48 +369,98 @@
   gap: clamp(8px, 1.2vw, 14px);
 }
 
-/* Floating QR Code Widget */
+/* Floating QR Code Widget (Compact TV-Friendly Footprint) */
 .qr-floating-widget {
   position: fixed;
-  bottom: clamp(48px, 7vh, 65px);
-  right: clamp(12px, 2vw, 24px);
-  background: rgba(16, 8, 36, 0.96);
-  border: 2px solid var(--neon-cyan);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 20px var(--neon-cyan-glow);
+  bottom: clamp(48px, 6.5vh, 60px);
+  right: clamp(10px, 1.5vw, 20px);
+  background: rgba(14, 7, 30, 0.94);
+  border: 1.5px solid var(--neon-cyan);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.85), 0 0 15px rgba(0, 240, 255, 0.35);
   border-radius: var(--radius-md);
-  padding: clamp(10px, 1.5vmin, 16px);
+  padding: clamp(6px, 0.8vmin, 10px) clamp(8px, 1vmin, 12px);
   z-index: 40;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: clamp(110px, 14vw, 140px);
 }
 
 .qr-floating-widget.minimized {
-  transform: translateY(calc(100% - 44px));
+  transform: translateY(calc(100% - 38px));
   padding-bottom: 6px;
+  background: rgba(14, 7, 30, 0.96);
+  border-color: var(--neon-pink);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8), 0 0 10px var(--neon-pink-glow);
+  cursor: pointer;
+}
+
+.qr-widget-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  gap: 4px;
+}
+
+.qr-badge-tag {
+  font-size: clamp(0.6rem, 0.8vmin, 0.68rem) !important;
+  padding: 2px 6px !important;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.qr-widget-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 0 3px;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.qr-widget-btn:hover {
+  color: #fff;
 }
 
 .qr-img {
-  width: clamp(100px, 13vmin, 160px);
-  height: clamp(100px, 13vmin, 160px);
+  width: clamp(64px, 7.5vmin, 86px);
+  height: clamp(64px, 7.5vmin, 86px);
   border-radius: var(--radius-sm);
   background: #fff;
-  padding: 6px;
+  padding: 4px;
+  object-fit: contain;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.qr-img:hover {
+  transform: scale(1.04);
 }
 
 .qr-caption {
-  font-size: clamp(0.75rem, 1.2vmin, 0.88rem);
+  font-size: clamp(0.64rem, 0.8vmin, 0.72rem);
   font-weight: 800;
   text-align: center;
   color: var(--neon-yellow);
+  line-height: 1.2;
 }
 
 .qr-url-hint {
-  font-size: clamp(0.68rem, 1vmin, 0.75rem);
+  font-size: clamp(0.58rem, 0.7vmin, 0.65rem);
   color: var(--text-muted);
   font-family: monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  text-align: center;
 }
 
 /* Right Queue Drawer */
@@ -501,4 +615,323 @@
 
 .tv-donate-modal.hidden {
   display: none;
+}
+
+/* Stage Big QR Modal (Scan from across the room / Smart TV) */
+.tv-qr-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 3, 18, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(14px, 3vmin, 30px);
+}
+
+.tv-qr-modal.hidden {
+  display: none;
+}
+
+.tv-qr-card {
+  background: rgba(18, 9, 38, 0.96);
+  border: 2px solid var(--neon-cyan);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 35px var(--neon-cyan-glow);
+  border-radius: var(--radius-lg);
+  padding: clamp(18px, 3vmin, 30px);
+  max-width: min(92vw, 420px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(10px, 1.8vmin, 14px);
+  position: relative;
+  animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.tv-qr-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.tv-qr-room-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 230, 0, 0.12);
+  border: 1.5px solid var(--neon-yellow);
+  box-shadow: 0 0 15px var(--neon-yellow-glow);
+  border-radius: var(--radius-full);
+  padding: 6px 16px;
+  font-size: clamp(0.85rem, 1.4vmin, 1rem);
+  font-weight: 800;
+  color: #fff;
+}
+
+.tv-qr-room-badge .room-code-tag {
+  color: var(--neon-yellow);
+  font-size: clamp(1.2rem, 2vmin, 1.5rem);
+  letter-spacing: 0.15em;
+}
+
+.tv-modal-qr-img {
+  width: clamp(180px, 30vmin, 250px);
+  height: clamp(180px, 30vmin, 250px);
+  background: #fff;
+  padding: 8px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 240, 255, 0.4);
+}
+
+.tv-qr-url-hint {
+  font-size: clamp(0.72rem, 1vmin, 0.82rem);
+  color: var(--neon-cyan);
+  font-family: monospace;
+}
+
+.tv-qr-instructions {
+  display: flex;
+  justify-content: center;
+  gap: clamp(8px, 1.5vmin, 14px);
+  width: 100%;
+  margin-top: 4px;
+}
+
+.tv-qr-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: clamp(0.7rem, 1vmin, 0.78rem);
+  color: var(--text-muted);
+  font-weight: 600;
+  gap: 4px;
+}
+
+.tv-qr-step span {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--neon-pink);
+  color: #fff;
+  font-weight: 900;
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   Responsive Design for All Devices (Smart TV, 4K, Laptop, Tablet, Mobile)
+   ========================================================================== */
+
+/* 1. Large Displays & Smart TVs (>= 1400px, 1080p, 4K) */
+@media (min-width: 1400px) {
+  .stage-header {
+    padding: 12px 28px;
+  }
+  .stage-ticker {
+    padding: 10px 28px;
+  }
+  .player-wrapper {
+    box-shadow: 0 24px 65px -10px rgba(0, 0, 0, 0.95), 0 0 35px var(--neon-pink-glow), 0 0 60px rgba(0, 240, 255, 0.25);
+  }
+}
+
+/* 2. Compact Laptops & Landscape Tablets (<= 1100px) */
+@media (max-width: 1100px) {
+  .stage-header {
+    padding: 8px 14px;
+  }
+  
+  .brand-logo span:last-child {
+    display: none; /* Hide 'KARAOKE NIGHT' label */
+  }
+
+  .stage-actions {
+    gap: 6px;
+  }
+
+  .stage-actions .btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+
+  #singers-count-badge {
+    font-size: 0.72rem;
+    padding: 4px 8px;
+  }
+}
+
+/* 3. Portrait Tablets & Small Desktops (<= 860px) */
+@media (max-width: 860px) {
+  .stage-header {
+    padding: 6px 10px;
+    gap: 8px;
+  }
+
+  .brand-logo {
+    font-size: 1.15rem;
+  }
+
+  .room-badge-container {
+    padding: 3px 8px;
+  }
+
+  .room-badge-container .badge {
+    display: none; /* Hide 'TV STAGE' badge, keep 'ROOM: [CODE]' */
+  }
+
+  #toggle-donate-btn .btn-label,
+  #toggle-qr-btn .btn-label {
+    display: none;
+  }
+
+  #toggle-donate-btn {
+    padding: 6px 9px;
+  }
+
+  #toggle-qr-btn {
+    padding: 6px 9px;
+  }
+
+  #res-mode-btn {
+    display: none;
+  }
+
+  .stage-ticker {
+    padding: 6px 12px;
+  }
+
+  .ticker-left {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  #next-up-ticker {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: clamp(140px, 35vw, 280px);
+    font-size: 0.82rem;
+  }
+
+  .qr-floating-widget {
+    bottom: 50px;
+    right: 8px;
+  }
+}
+
+/* 4. Mobile Phones (<= 600px) */
+@media (max-width: 600px) {
+  .stage-header {
+    flex-wrap: wrap;
+    padding: 6px 8px;
+    gap: 6px;
+  }
+
+  .brand-section {
+    flex: 1;
+    justify-content: space-between;
+  }
+
+  .stage-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 4px;
+  }
+
+  .stage-actions .btn {
+    padding: 5px 8px;
+    font-size: 0.75rem;
+  }
+
+  .stage-actions .btn .btn-label {
+    display: none;
+  }
+
+  #singers-count-badge {
+    display: none;
+  }
+
+  .video-arena {
+    padding: 4px;
+  }
+
+  .player-wrapper {
+    border-width: 2px;
+    border-radius: var(--radius-sm);
+    max-height: calc(100dvh - 145px);
+  }
+
+  .now-singing-bar {
+    max-width: 96%;
+    padding: 4px 8px;
+    top: 6px;
+    gap: 6px;
+  }
+
+  .song-details h3 {
+    max-width: 120px;
+    font-size: 0.78rem;
+  }
+
+  .song-details p {
+    max-width: 120px;
+    font-size: 0.65rem;
+  }
+
+  .now-singing-badge {
+    font-size: 0.58rem !important;
+    padding: 2px 5px !important;
+  }
+
+  .qr-floating-widget {
+    max-width: 105px;
+    bottom: 46px;
+    right: 6px;
+    padding: 4px 6px;
+  }
+
+  .qr-img {
+    width: 54px;
+    height: 54px;
+  }
+
+  .qr-caption {
+    font-size: 0.6rem;
+  }
+
+  .qr-url-hint {
+    display: none;
+  }
+
+  .stage-ticker {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 6px 8px;
+  }
+
+  .ticker-right {
+    justify-content: flex-end;
+  }
+
+  .ticker-right .btn {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+
+  .stage-queue-drawer {
+    width: 90vw;
+  }
 }

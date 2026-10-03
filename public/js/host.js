@@ -34,6 +34,15 @@
   const countdownSong = document.getElementById('countdown-song');
   const reactionsContainer = document.getElementById('reactions-container');
 
+  // Stage Big QR Modal Elements
+  const tvQrModal = document.getElementById('tv-qr-modal');
+  const closeQrModalBtn = document.getElementById('close-qr-modal-btn');
+  const modalRoomCode = document.getElementById('modal-room-code');
+  const modalQrImage = document.getElementById('modal-qr-image');
+  const modalQrUrlText = document.getElementById('modal-qr-url-text');
+  const expandQrModalBtn = document.getElementById('expand-qr-modal-btn');
+  let nowSingingDimTimer = null;
+
   // Buttons
   const toggleQrBtn = document.getElementById('toggle-qr-btn');
   const minimizeQrBtn = document.getElementById('minimize-qr-btn');
@@ -69,6 +78,9 @@
           roomCodeDisplay.textContent = res.roomCode;
           qrImage.src = res.qrDataUrl;
           qrUrlText.textContent = res.remoteUrl;
+          if (modalRoomCode) modalRoomCode.textContent = res.roomCode;
+          if (modalQrImage) modalQrImage.src = res.qrDataUrl;
+          if (modalQrUrlText) modalQrUrlText.textContent = res.remoteUrl;
           updateRoomState(res.state);
         }
       });
@@ -90,6 +102,8 @@
       console.log('[Host] Queue ended');
       currentSong = null;
       nowSingingBar.classList.add('hidden');
+      nowSingingBar.classList.remove('dimmed');
+      clearTimeout(nowSingingDimTimer);
       idleStage.classList.remove('hidden');
       nextUpTicker.textContent = 'Queue is empty. Scan QR to reserve songs!';
       if (ytPlayer && ytPlayer.stopVideo) {
@@ -344,6 +358,11 @@
         // Update UI
         idleStage.classList.add('hidden');
         nowSingingBar.classList.remove('hidden');
+        nowSingingBar.classList.remove('dimmed');
+        clearTimeout(nowSingingDimTimer);
+        nowSingingDimTimer = setTimeout(() => {
+          nowSingingBar.classList.add('dimmed');
+        }, 7000);
         currentSongTitle.textContent = queuedItem.song.title;
         currentSongSinger.textContent = queuedItem.addedBy || 'Singer';
         currentSongArtist.textContent = queuedItem.song.artist || 'Karaoke';
@@ -496,17 +515,124 @@
       });
     }
 
-    // Toggle QR Code Widget
-    toggleQrBtn.addEventListener('click', () => {
-      qrWidget.classList.toggle('minimized');
-    });
+    // Stage Big QR Modal Functions (For Smart TVs and easy room scanning)
+    function openTvQrModal() {
+      if (!tvQrModal) return;
+      if (currentRoomCode && modalRoomCode) modalRoomCode.textContent = currentRoomCode;
+      if (qrImage && modalQrImage && qrImage.src) modalQrImage.src = qrImage.src;
+      if (qrUrlText && modalQrUrlText && qrUrlText.textContent) modalQrUrlText.textContent = qrUrlText.textContent;
+      tvQrModal.classList.remove('hidden');
+    }
 
-    minimizeQrBtn.addEventListener('click', () => {
-      qrWidget.classList.toggle('minimized');
-    });
+    function closeTvQrModal() {
+      if (tvQrModal) tvQrModal.classList.add('hidden');
+    }
 
-    expandQrBtn.addEventListener('click', () => {
-      qrWidget.classList.remove('minimized');
+    if (toggleQrBtn) {
+      toggleQrBtn.addEventListener('click', () => {
+        if (tvQrModal && !tvQrModal.classList.contains('hidden')) {
+          closeTvQrModal();
+        } else {
+          openTvQrModal();
+        }
+      });
+    }
+
+    if (expandQrBtn) {
+      expandQrBtn.addEventListener('click', () => {
+        openTvQrModal();
+      });
+    }
+
+    if (expandQrModalBtn) {
+      expandQrModalBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openTvQrModal();
+      });
+    }
+
+    if (qrImage) {
+      qrImage.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openTvQrModal();
+      });
+    }
+
+    if (closeQrModalBtn) {
+      closeQrModalBtn.addEventListener('click', () => {
+        closeTvQrModal();
+      });
+    }
+
+    if (tvQrModal) {
+      tvQrModal.addEventListener('click', (e) => {
+        if (e.target === tvQrModal) {
+          closeTvQrModal();
+        }
+      });
+    }
+
+    // Floating QR Code Widget (Minimize / Restore)
+    function toggleQrWidgetMinimize() {
+      if (!qrWidget) return;
+      qrWidget.classList.toggle('minimized');
+      const isMin = qrWidget.classList.contains('minimized');
+      if (minimizeQrBtn) {
+        minimizeQrBtn.textContent = isMin ? '▲' : '−';
+        minimizeQrBtn.title = isMin ? 'Restore QR Code' : 'Minimize QR Code';
+      }
+    }
+
+    if (minimizeQrBtn) {
+      minimizeQrBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleQrWidgetMinimize();
+      });
+    }
+
+    if (qrWidget) {
+      qrWidget.addEventListener('click', (e) => {
+        if (qrWidget.classList.contains('minimized')) {
+          toggleQrWidgetMinimize();
+        }
+      });
+    }
+
+    // Now Singing Bar: Hover or Tap restores full brightness
+    if (nowSingingBar) {
+      nowSingingBar.addEventListener('mouseenter', () => {
+        nowSingingBar.classList.remove('dimmed');
+      });
+      nowSingingBar.addEventListener('mouseleave', () => {
+        if (currentSong) {
+          clearTimeout(nowSingingDimTimer);
+          nowSingingDimTimer = setTimeout(() => {
+            nowSingingBar.classList.add('dimmed');
+          }, 3500);
+        }
+      });
+      nowSingingBar.addEventListener('click', () => {
+        nowSingingBar.classList.remove('dimmed');
+      });
+    }
+
+    // Keyboard Shortcuts: Q for Big QR, Esc to close modals
+    window.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+      if (e.key === 'q' || e.key === 'Q') {
+        if (tvQrModal && !tvQrModal.classList.contains('hidden')) {
+          closeTvQrModal();
+        } else {
+          openTvQrModal();
+        }
+      }
+
+      if (e.key === 'Escape') {
+        closeTvQrModal();
+        if (tvDonateModal) tvDonateModal.classList.add('hidden');
+        closeScoreModal();
+      }
     });
 
     // Toggle Queue Drawer
